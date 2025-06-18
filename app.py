@@ -1,30 +1,38 @@
-from flask import Flask, jsonify
+from flask import Flask, request
 from flask_cors import CORS
-from src.database.db import db  
-from waitress import serve 
 
+# --- Auth ---
+from src.auth.login import login_unificado
+
+# --- Rutas externas (Blueprints) ---
+from src.routes.auth_routes import auth_router
+from src.routes.edificios_routes import router as edificios_router
+from src.routes.usuarios_routes import router as usuarios_router
+from src.routes.estudiantes_routes import router as estudiantes_router
+from src.routes.profesores_routes import router as profesores_router
+from src.routes.ventanilla_routes import router as ventanilla_router
+
+# --- Base de datos ---
+from src.database.db import db
+
+# --- App Init ---
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/test-db')
-def test_db():
-    try:
-        # Prueba: inserta un documento de prueba y luego lo elimina
-        test_collection = db["test"]
-        test_doc = {"mensaje": "¡Conexión exitosa a MongoDB Atlas!"}
-        result = test_collection.insert_one(test_doc)
+# === Registro de Blueprints ===
+app.register_blueprint(auth_router, url_prefix="/api")
+app.register_blueprint(edificios_router, url_prefix="/api/edificios")
+app.register_blueprint(usuarios_router, url_prefix="/api/usuarios")
+app.register_blueprint(estudiantes_router, url_prefix="/api/estudiantes")
+app.register_blueprint(profesores_router, url_prefix="/api/profesores")
+app.register_blueprint(ventanilla_router, url_prefix="/api/ventanilla")
 
-        # Recupera el documento insertado
-        inserted = test_collection.find_one({"_id": result.inserted_id})
+# === Rutas individuales ===
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.json
+    return login_usuario(data['correo'], data['contraseña'])
 
-        # Limpieza (elimina el documento de prueba)
-        test_collection.delete_one({"_id": result.inserted_id})
-
-        return jsonify({"status": "ok", "mensaje": inserted["mensaje"]})
-    except Exception as e:
-        return jsonify({"status": "error", "mensaje": str(e)}), 500
-
+# === Inicio de servidor ===
 if __name__ == '__main__':
-    print("Iniciando la aplicación con Waitress...")
-    # ¡CAMBIA ESTA LÍNEA!
-    serve(app, host='0.0.0.0', port=5001) 
+    app.run(debug=True)

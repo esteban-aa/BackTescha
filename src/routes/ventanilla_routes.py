@@ -11,5 +11,10 @@ from src.controller.ventanilla_con import (
 router = Blueprint("ventanilla", __name__)
 
 # --- Endpoints ---
-router.route("/", methods=["GET"])(obtener_ventanillas_controller)
-router.route("/<string:id>", methods=["GET"])(obtener_ventanilla_controller)
+@router.route("/", methods=["GET"])
+def obtener_ventanillas_route():
+    return obtener_ventanillas_controller()
+
+@router.route("/<string:id>", methods=["GET"])
+def obtener_ventanilla_route(id):
+    return obtener_ventanilla_controller(id)

@@ -1,0 +1,377 @@
+openapi: 3.0.3
+info:
+  title: API Chatbot TESCHA
+  description: API REST para gestión de ubicaciones, usuarios, horarios y roles en el campus TESCHA.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:5000/api
+    description: Servidor local de desarrollo
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        correo:
+          type: string
+          example: usuario@tescha.edu.mx
+        usuario:
+          type: string
+          example: juanperez
+        contraseña:
+          type: string
+          example: password123
+    Estudiante:
+      type: object
+      properties:
+        correo:
+          type: string
+          example: estudiante@tescha.edu.mx
+        usuario:
+          type: string
+          example: estu1
+        contraseña:
+          type: string
+          example: password123
+        matricula:
+          type: string
+          example: 2021001234
+    Profesor:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Ramírez
+        horario:
+          type: string
+          example: "08:00-10:00"
+    Edificio:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Edificio C
+        ubicacion:
+          type: string
+          example: Planta Baja
+    Ventanilla:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Ventanilla de Becas
+        horario:
+          type: string
+          example: "09:00-13:00"
+
+paths:
+
+  /login:
+    post:
+      summary: Login de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [correo, contraseña]
+              properties:
+                correo:
+                  type: string
+                  example: usuario@tescha.edu.mx
+                contraseña:
+                  type: string
+                  example: password123
+      responses:
+        '200':
+          description: Login exitoso con token JWT
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Credenciales inválidas
+
+  /usuarios:
+    get:
+      summary: Obtener lista de usuarios
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+    post:
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+
+  /usuarios/{id}:
+    get:
+      summary: Obtener usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+    put:
+      summary: Actualizar usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '200':
+          description: Usuario actualizado
+        '404':
+          description: Usuario no encontrado
+    delete:
+      summary: Eliminar usuario por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado
+        '404':
+          description: Usuario no encontrado
+
+  /estudiantes:
+    get:
+      summary: Obtener lista de estudiantes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de estudiantes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Estudiante'
+    post:
+      summary: Crear estudiante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Estudiante'
+      responses:
+        '201':
+          description: Estudiante creado
+
+  /estudiantes/{id}:
+    get:
+      summary: Obtener estudiante por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Estudiante encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Estudiante'
+        '404':
+          description: Estudiante no encontrado
+    put:
+      summary: Actualizar estudiante por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Estudiante'
+      responses:
+        '200':
+          description: Estudiante actualizado
+        '404':
+          description: Estudiante no encontrado
+    delete:
+      summary: Eliminar estudiante por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Estudiante eliminado
+        '404':
+          description: Estudiante no encontrado
+
+  /profesores:
+    get:
+      summary: Obtener lista de profesores
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de profesores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profesor'
+
+  /profesores/{id}:
+    get:
+      summary: Obtener profesor por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profesor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profesor'
+        '404':
+          description: Profesor no encontrado
+
+  /edificios:
+    get:
+      summary: Obtener lista de edificios
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de edificios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Edificio'
+
+  /edificios/{id}:
+    get:
+      summary: Obtener edificio por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Edificio encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Edificio'
+        '404':
+          description: Edificio no encontrado
+
+  /ventanilla:
+    get:
+      summary: Obtener lista de ventanillas
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de ventanillas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ventanilla'
+
+  /ventanilla/{id}:
+    get:
+      summary: Obtener ventanilla por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ventanilla encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ventanilla'
+        '404':
+          description: Ventanilla no encontrada

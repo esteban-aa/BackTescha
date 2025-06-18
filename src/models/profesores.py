@@ -3,23 +3,21 @@ from bson import ObjectId
 
 profesores = db["profesores"]
 
-def crear_profesores(nombre, horarios, edificio, salon):
-    return profesores.insert_one({
-        "nombre": nombre,
-        "horarios": {
-            "lunes": horarios.get("lunes", ""),
-            "martes": horarios.get("martes", ""),
-            "miércoles": horarios.get("miércoles", ""),
-            "jueves": horarios.get("jueves", ""),
-            "viernes": horarios.get("viernes", "")
-        },
-        "edificio": edificio,
-        "salon": salon
-    })
-
+# Obtener todos los profesores
 def obtener_profesores():
-    return list(profesores.find())
+    """Devuelve una lista de todos los profesores."""
+    return list(profesores.find({}, {
+        "_id": 1,
+        "nombre": 1,
+        "horarios": 1,
+        "edificio": 1,
+        "salon": 1
+    }))
 
+# Obtener un profesor por su ID
 def obtener_profesor_por_id(id):
-    return profesores.find_one({"_id": ObjectId(id)})
-
+    """Devuelve un profesor por su ID, o None si no existe o el ID es inválido."""
+    try:
+        return profesores.find_one({"_id": ObjectId(id)})
+    except:
+        return None

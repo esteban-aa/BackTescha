@@ -11,6 +11,10 @@ from src.controller.profesores_con import (
 router = Blueprint("profesores", __name__)
 
 # --- Endpoints ---
+@router.route("/", methods=["GET"])
+def obtener_profesores_route():
+    return obtener_profesores_controller()
 
-router.route("/", methods=["GET"])(obtener_profesores_controller)
-router.route("/<string:id>", methods=["GET"])(obtener_profesor_controller)
+@router.route("/<string:id>", methods=["GET"])
+def obtener_profesor_route(id):
+    return obtener_profesor_controller(id)

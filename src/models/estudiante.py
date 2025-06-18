@@ -1,13 +1,16 @@
 from src.database.db import db
 from bson import ObjectId
+import bcrypt
+
 
 estudiantes = db["estudiantes"]
 
 def crear_estudiante(correo, usuario, contraseña, matricula):
+    hashed = bcrypt.hashpw(contraseña.encode('utf-8'), bcrypt.gensalt())
     return estudiantes.insert_one({
         "correo": correo,
         "usuario": usuario,
-        "contraseña": contraseña,
+        "contraseña": hashed.decode('utf-8'),
         "matricula": matricula
     })
 
