@@ -31,7 +31,7 @@ app.register_blueprint(ventanilla_router, url_prefix="/api/ventanilla")
 @app.route('/api/login', methods=['POST'])
 def api_login():
     data = request.json
-    return login_usuario(data['correo'], data['contraseña'])
+    return login_unificado(data['correo'], data['contraseña'])
 
 @app.route('/api/file/read-file', methods=['GET'])
 def read_file():
