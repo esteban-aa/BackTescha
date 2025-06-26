@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 # --- Auth ---
 from src.auth.login import login_unificado
-
+from src.routes.chatbot_routes import chatbot_bp
 # --- Rutas externas (Blueprints) ---
 from src.routes.auth_routes import auth_router
 from src.routes.edificios_routes import router as edificios_router
@@ -11,8 +11,10 @@ from src.routes.usuarios_routes import router as usuarios_router
 from src.routes.estudiantes_routes import router as estudiantes_router
 from src.routes.profesores_routes import router as profesores_router
 from src.routes.ventanilla_routes import router as ventanilla_router
+from src.routes.jefatura_routes import router as jefatura_carrera_router 
+
 # --- Base de datos ---
-from src.database.db import db
+from src.database.db import db 
 
 # --- App Init ---
 app = Flask(__name__)
@@ -25,9 +27,10 @@ app.register_blueprint(usuarios_router, url_prefix="/api/usuarios")
 app.register_blueprint(estudiantes_router, url_prefix="/api/estudiantes")
 app.register_blueprint(profesores_router, url_prefix="/api/profesores")
 app.register_blueprint(ventanilla_router, url_prefix="/api/ventanilla")
+app.register_blueprint(jefatura_carrera_router, url_prefix="/api/jefatura_carrera")
+app.register_blueprint(chatbot_bp)
 
-
-# === Rutas individuales ===
+# === Rutas login ===
 @app.route('/api/login', methods=['POST'])
 def api_login():
     data = request.json
@@ -41,6 +44,7 @@ def read_file():
         return contenido, 200
     except Exception as e:
         return {'error': str(e)}, 500
+
 # === Inicio de servidor ===
 if __name__ == '__main__':
-      app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

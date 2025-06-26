@@ -7,7 +7,8 @@ ventanilla = db["ventanilla"]
 def obtener_ventanillas():
     """Devuelve una lista de todas las ventanillas."""
     return list(ventanilla.find({}, {
-        "ubicacion": 1,
+        "nombre": 1,
+        "coordenadas": 1,
         "horarios": 1,
         "tramites": 1
     }))

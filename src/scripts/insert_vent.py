@@ -12,12 +12,14 @@ ventanilla = db["ventanilla"]
 # ---- Datos de ejemplo para ventanillas ----
 ventanillas_data = [
     {
-        "ubicacion": "Control Escolar",
+        "nombre": "Control Escolar",
+        "coordenadas": [19.2327762, -98.840661],
         "horarios": ["Lunes a Viernes 09:00 AM - 15:00 PM y de 16:00 PM - 18:00 PM"],
         "tramites": ["Constancias", "Historial Académico", "Reinscripciones", "Bajas temporales", "Credenciales"]
     },
     {
-        "ubicacion": "Sor Juana",
+        "nombre": "Departamento de servicio social y residencias profesionales",
+        "coordenadas": [19.2331431, -98.8419580],
         "horarios": ["Lunes a Viernes 09:00 AM - 15:00 PM y de 16:00 PM - 18:00 PM"],
         "tramites": ["Trámites relacionados a Servicio Social", "Residencias Profesionales", "Seguimiento de Egresados"]
     }
